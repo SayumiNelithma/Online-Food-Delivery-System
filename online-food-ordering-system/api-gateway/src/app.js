@@ -54,4 +54,30 @@ app.use(
   })
 );
 
+// order-service
+app.use(
+  "/api/orders",
+  createProxyMiddleware({
+    target: process.env.ORDER_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: (path, req) => {
+      const extraPath = req.originalUrl.replace("/api/orders", "");
+      return `/orders${extraPath}`;
+    }
+  })
+);
+
+// payment-service
+app.use(
+  "/api/payments",
+  createProxyMiddleware({
+    target: process.env.PAYMENT_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: (path, req) => {
+      const extraPath = req.originalUrl.replace("/api/payments", "");
+      return `/payments${extraPath}`;
+    }
+  })
+);
+
 module.exports = app;
