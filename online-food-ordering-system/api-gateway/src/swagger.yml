@@ -1,0 +1,239 @@
+openapi: 3.0.0
+info:
+  title: Online Food Delivery System API Gateway
+  description: API Gateway combining documentation for all microservices in the system.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000
+    description: Local API Gateway Server
+
+paths:
+  # --------------------------------------------------------------------------------
+  # Customer Service
+  # --------------------------------------------------------------------------------
+  /api/customers:
+    get:
+      tags:
+        - Customer Service
+      summary: Get all customers
+      responses:
+        '200':
+          description: Successful operation
+    post:
+      tags:
+        - Customer Service
+      summary: Create a new customer
+      responses:
+        '201':
+          description: Created
+  /api/customers/{id}:
+    put:
+      tags:
+        - Customer Service
+      summary: Update a customer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    delete:
+      tags:
+        - Customer Service
+      summary: Delete a customer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+
+  # --------------------------------------------------------------------------------
+  # Restaurant Service
+  # --------------------------------------------------------------------------------
+  /api/restaurants:
+    get:
+      tags:
+        - Restaurant Service
+      summary: Get all restaurants
+      responses:
+        '200':
+          description: Successful operation
+    post:
+      tags:
+        - Restaurant Service
+      summary: Create a new restaurant
+      responses:
+        '201':
+          description: Created
+  /api/restaurants/{id}:
+    put:
+      tags:
+        - Restaurant Service
+      summary: Update a restaurant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    delete:
+      tags:
+        - Restaurant Service
+      summary: Delete a restaurant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+
+  # --------------------------------------------------------------------------------
+  # Menu Service
+  # --------------------------------------------------------------------------------
+  /api/menus:
+    get:
+      tags:
+        - Menu Service
+      summary: Get all menus
+      responses:
+        '200':
+          description: Successful operation
+    post:
+      tags:
+        - Menu Service
+      summary: Create a new menu item
+      responses:
+        '201':
+          description: Created
+  /api/menus/{id}:
+    put:
+      tags:
+        - Menu Service
+      summary: Update a menu item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    delete:
+      tags:
+        - Menu Service
+      summary: Delete a menu item
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+
+  # --------------------------------------------------------------------------------
+  # Order Service
+  # --------------------------------------------------------------------------------
+  /api/orders:
+    get:
+      tags:
+        - Order Service
+      summary: Get all orders
+      responses:
+        '200':
+          description: Successful operation
+    post:
+      tags:
+        - Order Service
+      summary: Create a new order
+      responses:
+        '201':
+          description: Created
+  /api/orders/{id}:
+    put:
+      tags:
+        - Order Service
+      summary: Update an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    delete:
+      tags:
+        - Order Service
+      summary: Delete an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+
+  # --------------------------------------------------------------------------------
+  # Payment Service
+  # --------------------------------------------------------------------------------
+  /api/payments:
+    get:
+      tags:
+        - Payment Service
+      summary: Get all payments
+      responses:
+        '200':
+          description: Successful operation
+    post:
+      tags:
+        - Payment Service
+      summary: Process a new payment
+      responses:
+        '201':
+          description: Created
+  /api/payments/{id}:
+    put:
+      tags:
+        - Payment Service
+      summary: Update a payment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    delete:
+      tags:
+        - Payment Service
+      summary: Delete a payment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
