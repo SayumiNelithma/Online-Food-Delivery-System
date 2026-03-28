@@ -97,33 +97,6 @@ const getOrdersByUser = async (req, res) => {
 	}
 };
 
-// POST /orders/:id/pay
-const payForOrder = async (req, res) => {
-	try {
-		const order = await Order.findOne({ orderId: req.params.id });
-		if (!order) return res.status(404).json({ message: "Order not found" });
-
-		if (order.status !== "CREATED") {
-			return res.status(400).json({ message: "Order cannot be paid for in its current status: " + order.status });
-		}
-
-		// Proxy to payment-service to initiate payment
-		const paymentResp = await axiosInstance.post(`${API_GATEWAY_URL}/api/payments/initiate`, {
-			userId: order.userId,
-			orderId: order.orderId,
-			amount: order.totalAmount
-		});
-
-		res.status(200).json({ message: "Payment initiated", payment: paymentResp.data.payment });
-	} catch (error) {
-		console.error("payForOrder error:", error.message);
-		if (error.response && error.response.status) {
-			return res.status(error.response.status).json(error.response.data);
-		}
-		res.status(500).json({ message: "Failed to initiate payment" });
-	}
-};
-
 // GET /orders/:id/payments
 const getOrderPayments = async (req, res) => {
 	try {
@@ -210,7 +183,6 @@ module.exports = {
 	getOrderById,
 	getOrdersByUser,
 	updateOrderStatus,
-	payForOrder,
 	getOrderPayments,
 	refundOrder,
 	cancelOrder

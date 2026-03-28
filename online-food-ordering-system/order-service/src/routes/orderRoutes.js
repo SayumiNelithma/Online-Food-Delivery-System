@@ -7,7 +7,6 @@ const {
 	getOrderById,
 	getOrdersByUser,
 	updateOrderStatus,
-	payForOrder,
 	getOrderPayments,
 	refundOrder,
 	cancelOrder
@@ -20,7 +19,6 @@ router.get("/user/:userId", getOrdersByUser);
 router.get("/:id", getOrderById);
 router.put("/:id/status", updateOrderStatus);
 
-router.post("/:id/pay", payForOrder);
 router.get("/:id/payments", getOrderPayments);
 router.post("/:id/refund", refundOrder);
 router.put("/:id/cancel", cancelOrder);
