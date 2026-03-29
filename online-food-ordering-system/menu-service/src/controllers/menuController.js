@@ -12,19 +12,26 @@ const createMenuItem = async (req, res) => {
             availability
         } = req.body;
 
-        if (!restaurant_id || !item_name || !description || price === undefined) {
-            return res.status(400).json({ message: "Missing required fields" });
+        if (!restaurant_id || !item_name || price === undefined) {
+            return res.status(400).json({
+                message: "restaurant_id, item_name, and price are required"
+            });
         }
 
-        const restaurantResponse = await axios.get(
-            `${process.env.API_GATEWAY_URL}/api/restaurants/${restaurant_id}`
-        );
+        const restaurantUrl = process.env.API_GATEWAY_URL
+            ? `${process.env.API_GATEWAY_URL}/api/restaurants/${restaurant_id}`
+            : `http://localhost:8000/api/restaurants/${restaurant_id}`;
 
+        const restaurantResponse = await axios.get(restaurantUrl);
         const restaurant = restaurantResponse.data;
+
+        if (!restaurant) {
+            return res.status(404).json({ message: "Restaurant not found" });
+        }
 
         const menuItem = await Menu.create({
             restaurant_id,
-            restaurant_name: restaurant.name,
+            restaurant_name: restaurant.restaurant_name || restaurant.name,
             item_name,
             description,
             price,
@@ -109,4 +116,3 @@ module.exports = {
     updateMenuItem,
     deleteMenuItem
 };
-

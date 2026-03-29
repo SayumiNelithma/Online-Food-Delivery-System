@@ -86,4 +86,17 @@ app.use(
   })
 );
 
+// delivery-service
+app.use(
+  "/api/deliveries",
+  createProxyMiddleware({
+    target: process.env.DELIVERY_SERVICE_URL,
+    changeOrigin: true,
+    pathRewrite: (path, req) => {
+      const extraPath = req.originalUrl.replace("/api/deliveries", "");
+      return `/deliveries${extraPath}`;
+    }
+  })
+);
+
 module.exports = app;

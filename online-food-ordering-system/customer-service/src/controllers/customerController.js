@@ -6,7 +6,10 @@ const createCustomer = async (req, res) => {
     const customer = await Customer.create(req.body);
     res.status(201).json(customer);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({
+      message: "Error creating customer",
+      error: error.message
+    });
   }
 };
 
@@ -16,7 +19,10 @@ const getAllCustomers = async (req, res) => {
     const customers = await Customer.find();
     res.status(200).json(customers);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "Error fetching customers",
+      error: error.message
+    });
   }
 };
 
@@ -31,40 +37,53 @@ const getCustomerById = async (req, res) => {
 
     res.status(200).json(customer);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "Error fetching customer",
+      error: error.message
+    });
   }
 };
 
 // PUT /customers/:id
 const updateCustomer = async (req, res) => {
   try {
-    const customer = await Customer.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true
-    });
+    const updatedCustomer = await Customer.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      {
+        new: true,
+        runValidators: true
+      }
+    );
 
-    if (!customer) {
+    if (!updatedCustomer) {
       return res.status(404).json({ message: "Customer not found" });
     }
 
-    res.status(200).json(customer);
+    res.status(200).json(updatedCustomer);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(400).json({
+      message: "Error updating customer",
+      error: error.message
+    });
   }
 };
 
 // DELETE /customers/:id
 const deleteCustomer = async (req, res) => {
   try {
-    const customer = await Customer.findByIdAndDelete(req.params.id);
+    const deletedCustomer = await Customer.findByIdAndDelete(req.params.id);
 
-    if (!customer) {
+    if (!deletedCustomer) {
       return res.status(404).json({ message: "Customer not found" });
     }
 
     res.status(200).json({ message: "Customer deleted successfully" });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      message: "Error deleting customer",
+      error: error.message
+    });
   }
 };
 

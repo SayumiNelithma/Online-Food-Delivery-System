@@ -27,6 +27,19 @@ paths:
         '201':
           description: Created
   /api/customers/{id}:
+    get:
+      tags:
+        - Customer Service
+      summary: Get a customer by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
     put:
       tags:
         - Customer Service
@@ -73,6 +86,19 @@ paths:
         '201':
           description: Created
   /api/restaurants/{id}:
+    get:
+      tags:
+        - Restaurant Service
+      summary: Get a restaurant by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
     put:
       tags:
         - Restaurant Service
@@ -119,6 +145,19 @@ paths:
         '201':
           description: Created
   /api/menus/{id}:
+    get:
+      tags:
+        - Menu Service
+      summary: Get a menu item by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
     put:
       tags:
         - Menu Service
@@ -165,6 +204,19 @@ paths:
         '201':
           description: Created
   /api/orders/{id}:
+    get:
+      tags:
+        - Order Service
+      summary: Get an order by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
     put:
       tags:
         - Order Service
@@ -211,6 +263,19 @@ paths:
         '201':
           description: Created
   /api/payments/{id}:
+    get:
+      tags:
+        - Payment Service
+      summary: Get a payment by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
     put:
       tags:
         - Payment Service
@@ -228,6 +293,65 @@ paths:
       tags:
         - Payment Service
       summary: Delete a payment
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+
+  # --------------------------------------------------------------------------------
+  # Delivery Service
+  # --------------------------------------------------------------------------------
+  /api/deliveries:
+    get:
+      tags:
+        - Delivery Service
+      summary: Get all deliveries
+      responses:
+        '200':
+          description: Successful operation
+    post:
+      tags:
+        - Delivery Service
+      summary: Create a new delivery
+      responses:
+        '201':
+          description: Created
+  /api/deliveries/{id}:
+    get:
+      tags:
+        - Delivery Service
+      summary: Get a delivery by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    put:
+      tags:
+        - Delivery Service
+      summary: Update a delivery
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    delete:
+      tags:
+        - Delivery Service
+      summary: Delete a delivery
       parameters:
         - name: id
           in: path
