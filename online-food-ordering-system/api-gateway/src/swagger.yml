@@ -67,6 +67,35 @@ paths:
         '200':
           description: Successful operation
 
+  /api/customers/{id}/orders:
+    get:
+      tags:
+        - Customer Service
+      summary: Get all orders by customer ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /api/customers/{id}/payments:
+    get:
+      tags:
+        - Customer Service
+      summary: Get all payments by customer ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+
   # --------------------------------------------------------------------------------
   # Restaurant Service
   # --------------------------------------------------------------------------------
@@ -122,6 +151,45 @@ paths:
           required: true
           schema:
             type: string
+      responses:
+        '200':
+          description: Successful operation
+
+  /api/restaurants/{id}/menus:
+    get:
+      tags:
+        - Restaurant Service
+      summary: Get all menus for a restaurant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /api/restaurants/{id}/status:
+    put:
+      tags:
+        - Restaurant Service
+      summary: Update restaurant operational status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: "CLOSED"
       responses:
         '200':
           description: Successful operation
@@ -185,6 +253,58 @@ paths:
         '200':
           description: Successful operation
 
+  /api/menus/restaurant/{restaurantId}:
+    get:
+      tags:
+        - Menu Service
+      summary: Get all menu items for a restaurant
+      parameters:
+        - name: restaurantId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    delete:
+      tags:
+        - Menu Service
+      summary: Delete all menu items for a restaurant
+      parameters:
+        - name: restaurantId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /api/menus/{id}/availability:
+    put:
+      tags:
+        - Menu Service
+      summary: Update menu item availability
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                availability:
+                  type: boolean
+                  example: false
+      responses:
+        '200':
+          description: Successful operation
+
   # --------------------------------------------------------------------------------
   # Order Service
   # --------------------------------------------------------------------------------
@@ -234,6 +354,100 @@ paths:
       tags:
         - Order Service
       summary: Delete an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /api/orders/user/{userId}:
+    get:
+      tags:
+        - Order Service
+      summary: Get orders by user ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /api/orders/restaurant/{restaurant_id}:
+    get:
+      tags:
+        - Order Service
+      summary: Get orders by restaurant ID
+      parameters:
+        - name: restaurant_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /api/orders/{id}/status:
+    put:
+      tags:
+        - Order Service
+      summary: Update order status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: "DELIVERED"
+      responses:
+        '200':
+          description: Successful operation
+  /api/orders/{id}/payments:
+    get:
+      tags:
+        - Order Service
+      summary: Get payments for an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /api/orders/{id}/cancel:
+    put:
+      tags:
+        - Order Service
+      summary: Cancel an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /api/orders/{id}/refund:
+    post:
+      tags:
+        - Order Service
+      summary: Refund an order
       parameters:
         - name: id
           in: path
@@ -354,6 +568,34 @@ paths:
       summary: Delete a delivery
       parameters:
         - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /api/deliveries/order/{orderId}:
+    get:
+      tags:
+        - Delivery Service
+      summary: Get delivery by order ID
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /api/deliveries/rider/{riderName}:
+    get:
+      tags:
+        - Delivery Service
+      summary: Get deliveries by rider name
+      parameters:
+        - name: riderName
           in: path
           required: true
           schema:

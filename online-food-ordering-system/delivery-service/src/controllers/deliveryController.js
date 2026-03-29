@@ -118,6 +118,17 @@ const updateDelivery = async (req, res) => {
       return res.status(404).json({ message: "Delivery not found" });
     }
 
+    // Auto-sync status with Order Service if delivered
+    if (delivery.delivery_status === "DELIVERED") {
+      try {
+        await axios.put(`${API_GATEWAY_URL}/api/orders/${delivery.order_id}/status`, {
+          status: "DELIVERED"
+        });
+      } catch (err) {
+        console.error("Failed to sync status with Order Service:", err.message);
+      }
+    }
+
     res.status(200).json(delivery);
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -139,10 +150,35 @@ const deleteDelivery = async (req, res) => {
   }
 };
 
+// GET /deliveries/order/:orderId
+const getDeliveryByOrder = async (req, res) => {
+  try {
+    const delivery = await Delivery.findOne({ order_id: req.params.orderId });
+    if (!delivery) {
+      return res.status(404).json({ message: "Delivery not found for this order" });
+    }
+    res.status(200).json(delivery);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// GET /deliveries/rider/:riderName
+const getDeliveriesByRider = async (req, res) => {
+  try {
+    const deliveries = await Delivery.find({ rider_name: req.params.riderName });
+    res.status(200).json(deliveries);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   createDelivery,
   getAllDeliveries,
   getDeliveryById,
   updateDelivery,
-  deleteDelivery
+  deleteDelivery,
+  getDeliveryByOrder,
+  getDeliveriesByRider
 };

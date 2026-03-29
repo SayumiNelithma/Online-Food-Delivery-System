@@ -47,10 +47,40 @@ const createOrder = async (req, res) => {
     }
 
     let calculatedTotal = 0;
-    if (total_price === undefined) {
-      for (const item of items) {
-        calculatedTotal += (item.price || 0) * (item.quantity || 1);
+    const enrichedItems = [];
+
+    for (const item of items) {
+      const menuId = item.menu_id || item.item_id || item._id;
+      let genuinePrice = item.price || 0;
+      let genuineName = item.item_name || item.name;
+
+      if (menuId) {
+        try {
+          const menuResp = await axiosInstance.get(
+            `${API_GATEWAY_URL}/api/menus/${menuId}`
+          );
+          if (menuResp.data && menuResp.data.restaurant_id === restaurant_id) {
+            genuinePrice = menuResp.data.price;
+            genuineName = menuResp.data.item_name;
+          } else if (menuResp.data && menuResp.data.restaurant_id !== restaurant_id) {
+            return res.status(400).json({ message: `Menu item ${menuId} does not belong to this restaurant` });
+          }
+        } catch (err) {
+          console.error(`Could not fetch menu item ${menuId}:`, err.message);
+          return res.status(400).json({ message: `Invalid menu item: ${menuId}` });
+        }
       }
+
+      const quantity = item.quantity || 1;
+      calculatedTotal += genuinePrice * quantity;
+
+      enrichedItems.push({
+        ...item,
+        menu_id: menuId,
+        item_name: genuineName,
+        price: genuinePrice,
+        quantity
+      });
     }
 
     const finalTotal =
@@ -68,7 +98,7 @@ const createOrder = async (req, res) => {
       order_date: order_date || new Date(),
       total_price: finalTotal,
       status: status || "CREATED",
-      items
+      items: enrichedItems
     });
 
     res.status(201).json({
@@ -129,6 +159,17 @@ const getOrdersByCustomer = async (req, res) => {
   } catch (error) {
     console.error("getOrdersByCustomer error:", error.message);
     res.status(500).json({ message: "Failed to get customer orders" });
+  }
+};
+
+// GET /orders/restaurant/:restaurant_id
+const getOrdersByRestaurant = async (req, res) => {
+  try {
+    const orders = await Order.find({ restaurant_id: req.params.restaurant_id });
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error("getOrdersByRestaurant error:", error.message);
+    res.status(500).json({ message: "Failed to get restaurant orders" });
   }
 };
 
@@ -280,6 +321,7 @@ module.exports = {
   getAllOrders,
   getOrderById,
   getOrdersByCustomer,
+  getOrdersByRestaurant,
   updateOrderStatus,
   getOrderPayments,
   refundOrder,

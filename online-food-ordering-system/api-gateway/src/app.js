@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
 });
 
 const swaggerDocument = YAML.load(path.join(__dirname, "swagger.yml"));
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 // customer-service
 app.use(

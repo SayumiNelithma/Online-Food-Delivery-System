@@ -1,4 +1,10 @@
+const axios = require("axios");
 const Customer = require("../models/Customer");
+
+const API_GATEWAY_URL =
+  process.env.API_GATEWAY_URL ||
+  process.env.GATEWAY_URL ||
+  "http://localhost:8000";
 
 // POST /customers
 const createCustomer = async (req, res) => {
@@ -86,11 +92,54 @@ const deleteCustomer = async (req, res) => {
     });
   }
 };
+// GET /customers/:id/orders
+const getOrdersByCustomer = async (req, res) => {
+  try {
+    const customer = await Customer.findById(req.params.id);
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    const orderResponse = await axios.get(
+      `${API_GATEWAY_URL}/api/orders/user/${req.params.id}`
+    );
+
+    res.status(200).json(orderResponse.data);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error fetching customer orders",
+      error: error.message
+    });
+  }
+};
+
+// GET /customers/:id/payments
+const getPaymentsByCustomer = async (req, res) => {
+  try {
+    const customer = await Customer.findById(req.params.id);
+    if (!customer) {
+      return res.status(404).json({ message: "Customer not found" });
+    }
+
+    const paymentResponse = await axios.get(
+      `${API_GATEWAY_URL}/api/payments/user/${req.params.id}`
+    );
+
+    res.status(200).json(paymentResponse.data);
+  } catch (error) {
+    res.status(500).json({
+      message: "Error fetching customer payments",
+      error: error.message
+    });
+  }
+};
 
 module.exports = {
   createCustomer,
   getAllCustomers,
   getCustomerById,
   updateCustomer,
-  deleteCustomer
+  deleteCustomer,
+  getOrdersByCustomer,
+  getPaymentsByCustomer
 };

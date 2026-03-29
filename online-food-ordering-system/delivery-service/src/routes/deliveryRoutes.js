@@ -6,11 +6,15 @@ const {
   getAllDeliveries,
   getDeliveryById,
   updateDelivery,
-  deleteDelivery
+  deleteDelivery,
+  getDeliveryByOrder,
+  getDeliveriesByRider
 } = require("../controllers/deliveryController");
 
 router.post("/", createDelivery);
 router.get("/", getAllDeliveries);
+router.get("/order/:orderId", getDeliveryByOrder);
+router.get("/rider/:riderName", getDeliveriesByRider);
 router.get("/:id", getDeliveryById);
 router.put("/:id", updateDelivery);
 router.delete("/:id", deleteDelivery);
