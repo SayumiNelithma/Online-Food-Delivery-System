@@ -6,7 +6,6 @@ const {
 	getAllOrders,
 	getOrderById,
 	getOrdersByUser,
-	getOrdersByRestaurant,
 	updateOrderStatus,
 	getOrderPayments,
 	refundOrder,
@@ -16,7 +15,6 @@ const {
 router.post("/", createOrder);
 router.get("/", getAllOrders);
 router.get("/user/:userId", getOrdersByUser);
-router.get("/restaurant/:restaurant_id", getOrdersByRestaurant);
 
 router.get("/:id", getOrderById);
 router.put("/:id/status", updateOrderStatus);
