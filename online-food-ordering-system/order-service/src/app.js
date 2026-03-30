@@ -1,9 +1,6 @@
 const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
-const swaggerUi = require("swagger-ui-express");
-const YAML = require("yamljs");
-const path = require("path");
 
 const orderRoutes = require("./routes/orderRoutes");
 const notFound = require("./middleware/notFoundMiddleware");
@@ -14,9 +11,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
-
-const swaggerDocument = YAML.load(path.join(__dirname, "swagger.yml"));
-app.use("/orders/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get("/", (req, res) => res.send("Order Service Running"));
 
