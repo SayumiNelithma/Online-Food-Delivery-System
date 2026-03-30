@@ -126,27 +126,6 @@ const swaggerSpec = {
 				}
 			}
 		},
-		"/orders/{id}/pay": {
-			post: {
-				summary: "Initiate payment for an order",
-				tags: ["Orders"],
-				parameters: [
-					{
-						in: "path",
-						name: "id",
-						schema: { type: "string" },
-						required: true,
-						description: "The order ID"
-					}
-				],
-				responses: {
-					"200": { description: "Payment initiated" },
-					"400": { description: "Order cannot be paid for in its current status" },
-					"404": { description: "Order not found" },
-					"500": { description: "Server error" }
-				}
-			}
-		},
 		"/orders/{id}/payments": {
 			get: {
 				summary: "Get payments for an order",
