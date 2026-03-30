@@ -151,14 +151,14 @@ const getOrderById = async (req, res) => {
   }
 };
 
-// GET /orders/customer/:customer_id
-const getOrdersByCustomer = async (req, res) => {
+// GET /orders/user/:userId
+const getOrdersByUser = async (req, res) => {
   try {
-    const orders = await Order.find({ customer_id: req.params.customer_id });
+    const orders = await Order.find({ customer_id: req.params.userId });
     res.status(200).json(orders);
   } catch (error) {
-    console.error("getOrdersByCustomer error:", error.message);
-    res.status(500).json({ message: "Failed to get customer orders" });
+    console.error("getOrdersByUser error:", error.message);
+    res.status(500).json({ message: "Failed to get user orders" });
   }
 };
 
@@ -320,7 +320,7 @@ module.exports = {
   createOrder,
   getAllOrders,
   getOrderById,
-  getOrdersByCustomer,
+  getOrdersByUser,
   getOrdersByRestaurant,
   updateOrderStatus,
   getOrderPayments,
