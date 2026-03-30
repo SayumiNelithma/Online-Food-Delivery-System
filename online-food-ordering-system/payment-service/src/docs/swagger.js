@@ -19,9 +19,8 @@ const swaggerSpec = {
 								properties: {
 									userId: { type: "string" },
 									orderId: { type: "string" },
-									amount: { type: "number" },
 								},
-								required: ["userId", "orderId", "amount"]
+								required: ["userId", "orderId"]
 							}
 						}
 					}

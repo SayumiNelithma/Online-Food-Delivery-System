@@ -18,35 +18,35 @@ const swaggerSpec = {
 								type: "object",
 								properties: {
 									userId: { type: "string" },
-									items: { 
+									restaurantId: { type: "string" },
+									items: {
 										type: "array",
 										items: {
 											type: "object",
 											properties: {
 												menuItemId: { type: "string" },
-												quantity: { type: "number" },
-												price: { type: "number" }
-											}
+												quantity: { type: "number" }
+											},
+											required: ["menuItemId", "quantity"]
 										}
-									},
-									totalAmount: { type: "number" }
+									}
 								},
-								required: ["userId", "items"]
+								required: ["userId", "restaurantId", "items"]
 							}
 						}
 					}
 				},
-				responses: { 
+				responses: {
 					"201": { description: "Order created successfully" },
-					"400": { description: "Missing fields" },
-					"404": { description: "User not found" },
+					"400": { description: "Missing fields or invalid data" },
+					"404": { description: "User, restaurant, or menu item not found" },
 					"500": { description: "Server error" }
-				}
+				},
 			},
 			get: {
 				summary: "Get all orders",
 				tags: ["Orders"],
-				responses: { 
+				responses: {
 					"200": { description: "List of orders" },
 					"500": { description: "Server error" }
 				}
@@ -65,7 +65,7 @@ const swaggerSpec = {
 						description: "The user ID"
 					}
 				],
-				responses: { 
+				responses: {
 					"200": { description: "List of user orders" },
 					"500": { description: "Server error" }
 				}
@@ -84,7 +84,7 @@ const swaggerSpec = {
 						description: "The order ID"
 					}
 				],
-				responses: { 
+				responses: {
 					"200": { description: "Order details" },
 					"404": { description: "Order not found" },
 					"500": { description: "Server error" }
@@ -118,7 +118,7 @@ const swaggerSpec = {
 						}
 					}
 				},
-				responses: { 
+				responses: {
 					"200": { description: "Order status updated" },
 					"400": { description: "Status is required" },
 					"404": { description: "Order not found" },
@@ -139,7 +139,7 @@ const swaggerSpec = {
 						description: "The order ID"
 					}
 				],
-				responses: { 
+				responses: {
 					"200": { description: "Payment initiated" },
 					"400": { description: "Order cannot be paid for in its current status" },
 					"404": { description: "Order not found" },
@@ -160,7 +160,7 @@ const swaggerSpec = {
 						description: "The order ID"
 					}
 				],
-				responses: { 
+				responses: {
 					"200": { description: "List of payments" },
 					"500": { description: "Server error" }
 				}
@@ -179,7 +179,7 @@ const swaggerSpec = {
 						description: "The order ID"
 					}
 				],
-				responses: { 
+				responses: {
 					"200": { description: "Order refunded" },
 					"400": { description: "No successful payment found" },
 					"404": { description: "Order not found" },
@@ -200,7 +200,7 @@ const swaggerSpec = {
 						description: "The order ID"
 					}
 				],
-				responses: { 
+				responses: {
 					"200": { description: "Order cancelled" },
 					"400": { description: "Order already cancelled" },
 					"404": { description: "Order not found" },
