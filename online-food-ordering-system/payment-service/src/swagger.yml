@@ -10,58 +10,128 @@ servers:
     description: API Gateway Server
 
 paths:
-  /payments:
-    get:
-      tags:
-        - Payment Service
-      summary: Get all payments
-      responses:
-        '200':
-          description: Successful operation
+  /payments/initiate:
     post:
-      tags:
-        - Payment Service
-      summary: Process a new payment
+      tags: [Payment Service]
+      summary: Initiate a payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userId: { type: string }
+                orderId: { type: string }
+                amount: { type: number }
       responses:
-        '201':
-          description: Created
-  /payments/{id}:
+        '201': { description: Payment initiated }
+
+  /payments/confirm:
+    post:
+      tags: [Payment Service]
+      summary: Confirm a payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                paymentId: { type: string }
+      responses:
+        '200': { description: Payment confirmed }
+
+  /payments/cancel:
+    post:
+      tags: [Payment Service]
+      summary: Cancel a payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                paymentId: { type: string }
+      responses:
+        '200': { description: Payment cancelled }
+
+  /payments/refund:
+    post:
+      tags: [Payment Service]
+      summary: Refund a payment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                paymentId: { type: string }
+      responses:
+        '200': { description: Payment refunded }
+
+  /payments/webhook:
+    post:
+      tags: [Payment Service]
+      summary: Payment webhook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                paymentId: { type: string }
+                status: { type: string }
+      responses:
+        '200': { description: Webhook processed }
+
+  /payments/{paymentId}:
     get:
-      tags:
-        - Payment Service
-      summary: Get a payment by ID
+      tags: [Payment Service]
+      summary: Get payment by ID
       parameters:
-        - name: id
+        - name: paymentId
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       responses:
-        '200':
-          description: Successful operation
-    put:
-      tags:
-        - Payment Service
-      summary: Update a payment
+        '200': { description: Successful operation }
+
+  /payments/order/{orderId}:
+    get:
+      tags: [Payment Service]
+      summary: Get payments by order ID
       parameters:
-        - name: id
+        - name: orderId
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       responses:
-        '200':
-          description: Successful operation
-    delete:
-      tags:
-        - Payment Service
-      summary: Delete a payment
+        '200': { description: Successful operation }
+
+  /payments/user/{userId}:
+    get:
+      tags: [Payment Service]
+      summary: Get payments by user ID
       parameters:
-        - name: id
+        - name: userId
           in: path
           required: true
-          schema:
-            type: string
+          schema: { type: string }
       responses:
-        '200':
-          description: Successful operation
+        '200': { description: Successful operation }
+
+  /payments/status/{paymentId}:
+    get:
+      tags: [Payment Service]
+      summary: Get payment status by payment ID
+      parameters:
+        - name: paymentId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Successful operation }
