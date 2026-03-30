@@ -98,6 +98,7 @@ const deleteRestaurant = async (req, res) => {
     });
   }
 };
+
 // GET /restaurants/:id/menus
 const getMenusByRestaurant = async (req, res) => {
   try {

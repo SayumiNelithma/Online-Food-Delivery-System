@@ -38,40 +38,86 @@ const updateOrderStatus = async (req, res) => {
 // POST /orders
 const createOrder = async (req, res) => {
 	try {
-		const { userId, items, totalAmount } = req.body;
-		if (!userId || !items || items.length === 0) {
-			return res.status(400).json({ message: "userId and items are required" });
+		const { userId, restaurantId, items: requestItems } = req.body;
+		
+		if (!userId || !restaurantId || !requestItems || requestItems.length === 0) {
+			return res.status(400).json({ 
+				message: "userId, restaurantId, and items are required" 
+			});
 		}
 
-		// Validate user via API Gateway
-		const userResp = await axiosInstance.get(`${API_GATEWAY_URL}/api/customers/${userId}`);
+		// Fetch user, restaurant, and menu in parallel
+		const [userPromise, restaurantPromise, menuPromise] = [
+			axiosInstance.get(`${API_GATEWAY_URL}/api/customers/${userId}`),
+			axiosInstance.get(`${API_GATEWAY_URL}/api/restaurants/${restaurantId}`),
+			axiosInstance.get(`${API_GATEWAY_URL}/api/restaurants/${restaurantId}/menus`)
+		];
+
+		const [userResp, restaurantResp, menuResp] = await Promise.all([
+			userPromise,
+			restaurantPromise,
+			menuPromise
+		]);
+
+		// Validate responses
 		if (userResp.status !== 200 || !userResp.data) {
 			return res.status(404).json({ message: "User not found" });
 		}
-
-		let calculatedTotal = 0;
-		if (totalAmount === undefined) {
-			for (const item of items) {
-				calculatedTotal += (item.price || 0) * (item.quantity || 1);
-			}
+		
+		if (restaurantResp.status !== 200 || !restaurantResp.data) {
+			return res.status(404).json({ message: "Restaurant not found" });
+		}
+		
+		if (menuResp.status !== 200 || !menuResp.data) {
+			return res.status(500).json({ message: "Failed to fetch restaurant menu" });
 		}
 
-		const finalAmount = totalAmount !== undefined ? totalAmount : calculatedTotal;
+		// Create lookup map
+		const menuItemMap = new Map();
+		menuResp.data.forEach(item => {
+			menuItemMap.set(item._id || item.id, item);
+		});
+
+		// Validate and calculate
+		const validatedItems = [];
+		let totalAmount = 0;
+
+		for (const requestItem of requestItems) {
+			const { menuItemId, quantity } = requestItem;
+			
+			const menuItem = menuItemMap.get(menuItemId);
+			
+			if (!menuItem) {
+				return res.status(404).json({ 
+					message: `Menu item ${menuItemId} not found` 
+				});
+			}
+
+			const itemTotal = menuItem.price * quantity;
+			validatedItems.push({
+				menuItemId,
+				name: menuItem.name,
+				quantity,
+				price: menuItem.price,
+				totalPrice: itemTotal
+			});
+			
+			totalAmount += itemTotal;
+		}
 
 		const order = await Order.create({
 			userId,
-			items,
-			totalAmount: finalAmount,
+			restaurantId,
+			items: validatedItems,
+			totalAmount,
 			status: "CREATED"
 		});
 
 		res.status(201).json({ message: "Order created successfully", order });
+		
 	} catch (error) {
 		console.error("createOrder error:", error.message);
-		if (error.response && error.response.status === 404) {
-			return res.status(404).json({ message: "User not found" });
-		}
-		res.status(500).json({ message: "Failed to create order" });
+		res.status(500).json({ message: "Failed to create order", error: error.message });
 	}
 };
 

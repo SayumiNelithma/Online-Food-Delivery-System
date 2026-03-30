@@ -7,9 +7,9 @@ const axiosInstance = axios.create({ timeout: 5000 });
 
 // POST /payments/initiate
 const initiatePayment = async (req, res) => {
-	const { userId, orderId, amount } = req.body;
-	if (!userId || !orderId || amount == null) {
-		return res.status(400).json({ message: "userId, orderId and amount are required" });
+	const { userId, orderId } = req.body;
+	if (!userId || !orderId) {
+		return res.status(400).json({ message: "userId and orderId are required" });
 	}
 
 	try {
@@ -25,6 +25,7 @@ const initiatePayment = async (req, res) => {
 			return res.status(404).json({ message: "Order not found" });
 		}
 
+		const amount = orderResp.data.totalAmount;
 		const payment = await Payment.create({ userId, orderId, amount, status: "PENDING" });
 
 		res.status(201).json({ message: "Payment initiated", payment });
