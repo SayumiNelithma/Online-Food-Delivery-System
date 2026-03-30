@@ -1,0 +1,161 @@
+openapi: 3.0.0
+info:
+  title: Order Service API
+  description: Local API documentation for the Order microservice.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5004
+    description: Standalone Order Service Server
+  - url: http://localhost:8000/api
+    description: API Gateway Server
+
+paths:
+  /orders:
+    get:
+      tags:
+        - Order Service
+      summary: Get all orders
+      responses:
+        '200':
+          description: Successful operation
+    post:
+      tags:
+        - Order Service
+      summary: Create a new order
+      responses:
+        '201':
+          description: Created
+  /orders/{id}:
+    get:
+      tags:
+        - Order Service
+      summary: Get an order by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    put:
+      tags:
+        - Order Service
+      summary: Update an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    delete:
+      tags:
+        - Order Service
+      summary: Delete an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /orders/user/{userId}:
+    get:
+      tags:
+        - Order Service
+      summary: Get orders by user ID
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /orders/restaurant/{restaurant_id}:
+    get:
+      tags:
+        - Order Service
+      summary: Get orders by restaurant ID
+      parameters:
+        - name: restaurant_id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /orders/{id}/status:
+    put:
+      tags:
+        - Order Service
+      summary: Update order status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: "DELIVERED"
+      responses:
+        '200':
+          description: Successful operation
+  /orders/{id}/payments:
+    get:
+      tags:
+        - Order Service
+      summary: Get payments for an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /orders/{id}/cancel:
+    put:
+      tags:
+        - Order Service
+      summary: Cancel an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /orders/{id}/refund:
+    post:
+      tags:
+        - Order Service
+      summary: Refund an order
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation

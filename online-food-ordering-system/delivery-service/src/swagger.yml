@@ -1,0 +1,95 @@
+openapi: 3.0.0
+info:
+  title: Delivery Service API
+  description: Local API documentation for the Delivery microservice.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5006
+    description: Standalone Delivery Service Server
+  - url: http://localhost:8000/api
+    description: API Gateway Server
+
+paths:
+  /deliveries:
+    get:
+      tags:
+        - Delivery Service
+      summary: Get all deliveries
+      responses:
+        '200':
+          description: Successful operation
+    post:
+      tags:
+        - Delivery Service
+      summary: Create a new delivery
+      responses:
+        '201':
+          description: Created
+  /deliveries/{id}:
+    get:
+      tags:
+        - Delivery Service
+      summary: Get a delivery by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    put:
+      tags:
+        - Delivery Service
+      summary: Update a delivery
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    delete:
+      tags:
+        - Delivery Service
+      summary: Delete a delivery
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /deliveries/order/{orderId}:
+    get:
+      tags:
+        - Delivery Service
+      summary: Get delivery by order ID
+      parameters:
+        - name: orderId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /deliveries/rider/{riderName}:
+    get:
+      tags:
+        - Delivery Service
+      summary: Get deliveries by rider name
+      parameters:
+        - name: riderName
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation

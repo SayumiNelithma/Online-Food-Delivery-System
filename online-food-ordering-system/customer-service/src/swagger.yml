@@ -1,0 +1,96 @@
+openapi: 3.0.0
+info:
+  title: Customer Service API
+  description: Local API documentation for the Customer microservice.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5001
+    description: Standalone Customer Service Server
+  - url: http://localhost:8000/api
+    description: API Gateway Server
+
+paths:
+  /customers:
+    get:
+      tags:
+        - Customer Service
+      summary: Get all customers
+      responses:
+        '200':
+          description: Successful operation
+    post:
+      tags:
+        - Customer Service
+      summary: Create a new customer
+      responses:
+        '201':
+          description: Created
+  /customers/{id}:
+    get:
+      tags:
+        - Customer Service
+      summary: Get a customer by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    put:
+      tags:
+        - Customer Service
+      summary: Update a customer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    delete:
+      tags:
+        - Customer Service
+      summary: Delete a customer
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+
+  /customers/{id}/orders:
+    get:
+      tags:
+        - Customer Service
+      summary: Get all orders by customer ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /customers/{id}/payments:
+    get:
+      tags:
+        - Customer Service
+      summary: Get all payments by customer ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation

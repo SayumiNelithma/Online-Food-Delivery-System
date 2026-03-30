@@ -1,0 +1,105 @@
+openapi: 3.0.0
+info:
+  title: Restaurant Service API
+  description: Local API documentation for the Restaurant microservice.
+  version: 1.0.0
+servers:
+  - url: http://localhost:5002
+    description: Standalone Restaurant Service Server
+  - url: http://localhost:8000/api
+    description: API Gateway Server
+
+paths:
+  /restaurants:
+    get:
+      tags:
+        - Restaurant Service
+      summary: Get all restaurants
+      responses:
+        '200':
+          description: Successful operation
+    post:
+      tags:
+        - Restaurant Service
+      summary: Create a new restaurant
+      responses:
+        '201':
+          description: Created
+  /restaurants/{id}:
+    get:
+      tags:
+        - Restaurant Service
+      summary: Get a restaurant by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    put:
+      tags:
+        - Restaurant Service
+      summary: Update a restaurant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+    delete:
+      tags:
+        - Restaurant Service
+      summary: Delete a restaurant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /restaurants/{id}/menus:
+    get:
+      tags:
+        - Restaurant Service
+      summary: Get all menus for a restaurant
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful operation
+  /restaurants/{id}/status:
+    put:
+      tags:
+        - Restaurant Service
+      summary: Update restaurant operational status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  example: "CLOSED"
+      responses:
+        '200':
+          description: Successful operation

@@ -2,7 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const morgan = require("morgan");
 const swaggerUi = require("swagger-ui-express");
-const swaggerSpec = require("./docs/swagger");
+const YAML = require("yamljs");
+const path = require("path");
 
 const paymentRoutes = require("./routes/paymentRoutes");
 const notFound = require("./middleware/notFoundMiddleware");
@@ -14,7 +15,8 @@ app.use(cors());
 app.use(express.json());
 app.use(morgan("dev"));
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+const swaggerDocument = YAML.load(path.join(__dirname, "swagger.yml"));
+app.use("/payments/docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.get("/", (req, res) => res.send("Payment Service Running"));
 
