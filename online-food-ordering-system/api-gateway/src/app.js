@@ -4,6 +4,7 @@ const morgan = require("morgan");
 const { createProxyMiddleware } = require("http-proxy-middleware");
 require("dotenv").config();
 
+
 const app = express();
 
 app.use(cors());
@@ -13,6 +14,61 @@ app.use(morgan("dev"));
 app.get("/", (req, res) => {
   res.send("API Gateway Running");
 });
+
+// ── Gateway-level Swagger UI (multi-service dropdown) ────────────────────────
+// Uses swagger-ui-dist directly so the urls[] dropdown is 100% reliable.
+const swaggerUiDist = require("swagger-ui-dist");
+
+// Serve swagger-ui static assets under /api-docs/assets/
+app.use("/api-docs/assets", express.static(swaggerUiDist.absolutePath()));
+
+// Serve the custom HTML page at /api-docs  (and /api-docs/)
+const swaggerHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Online Food Delivery – API Gateway Docs</title>
+  <link rel="stylesheet" href="/api-docs/assets/swagger-ui.css" />
+</head>
+<body>
+  <div id="swagger-ui"></div>
+  <script src="/api-docs/assets/swagger-ui-bundle.js"></script>
+  <script src="/api-docs/assets/swagger-ui-standalone-preset.js"></script>
+  <script>
+    window.onload = function () {
+      SwaggerUIBundle({
+        urls: [
+          { name: "Customer Service",   url: "/api/customers/api-docs.json" },
+          { name: "Restaurant Service", url: "/api/restaurants/api-docs.json" },
+          { name: "Menu Service",       url: "/api/menus/api-docs.json" },
+          { name: "Order Service",      url: "/api/orders/api-docs.json" },
+          { name: "Payment Service",    url: "/api/payments/api-docs.json" },
+          { name: "Delivery Service",   url: "/api/deliveries/api-docs.json" }
+        ],
+        "urls.primaryName": "Customer Service",
+        dom_id: "#swagger-ui",
+        presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+        layout: "StandaloneLayout",
+        deepLinking: true
+      });
+    };
+  </script>
+</body>
+</html>`;
+
+app.get("/api-docs", (req, res) => res.send(swaggerHtml));
+app.get("/api-docs/", (req, res) => res.send(swaggerHtml));
+
+
+// ── JSON spec proxy routes (so Swagger UI can fetch each service's spec) ─────
+// These proxy /api/*/api-docs.json → each service's /api-docs.json
+app.get("/api/customers/api-docs.json",   createProxyMiddleware({ target: process.env.CUSTOMER_SERVICE_URL,   changeOrigin: true, pathRewrite: { ".*": "/api-docs.json" } }));
+app.get("/api/restaurants/api-docs.json", createProxyMiddleware({ target: process.env.RESTAURANT_SERVICE_URL, changeOrigin: true, pathRewrite: { ".*": "/api-docs.json" } }));
+app.get("/api/menus/api-docs.json",       createProxyMiddleware({ target: process.env.MENU_SERVICE_URL,        changeOrigin: true, pathRewrite: { ".*": "/api-docs.json" } }));
+app.get("/api/orders/api-docs.json",      createProxyMiddleware({ target: process.env.ORDER_SERVICE_URL,       changeOrigin: true, pathRewrite: { ".*": "/api-docs.json" } }));
+app.get("/api/payments/api-docs.json",    createProxyMiddleware({ target: process.env.PAYMENT_SERVICE_URL,    changeOrigin: true, pathRewrite: { ".*": "/api-docs.json" } }));
+app.get("/api/deliveries/api-docs.json",  createProxyMiddleware({ target: process.env.DELIVERY_SERVICE_URL,   changeOrigin: true, pathRewrite: { ".*": "/api-docs.json" } }));
 
 // ── Swagger UI proxy routes (must be BEFORE generic service routes) ──────────
 // swagger-ui-express issues a 301 redirect /api-docs → /api-docs/ with an
